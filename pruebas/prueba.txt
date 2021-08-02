@@ -1,0 +1,5 @@
+lista de frutas
+platano
+manzana
+pera
+fresa

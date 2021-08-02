@@ -1,27 +1,41 @@
 // importando paquetes de node.js
-const chalk = require('chalk');
+const chalk = require('chalk'); //dependencia para color y tipo de letra 
+const fetch = require('fetch'); //Obtener el contenido de la URL
+const figlet = require('figlet');
+
+const { validatePath, convertPathToAbsolute, existPath, isDirectory } = require('./cli');
+
 const log = console.log;
 
 module.exports = () => {
     // ...
 };
 
-log(chalk.red('Hello world!'));
-log(chalk.blue('Hello') + ' World' + chalk.red('!'))
+// log(process.env);
+//log(process.argv);
 
+//Variables
+let ruta = process.argv[2];
+let opcionStatsOrValidate1 = process.argv[3];
+let opcionStatsOrValidate2 = process.argv[4];
 
-console.log(chalk.bold.rgb(10, 100, 200)('Hello!'));
-console.log(chalk.bold.rgb(10, 100, 200)
-    `Hello!`);
-console.log(chalk `{bold.rgb(10,100,200) Hello!}`);
+const isAbsolute = validatePath(ruta);
+if (!isAbsolute) {
+    // No es Absoluta entonces convertirlo
+    ruta = convertPathToAbsolute(ruta); // Convertir ruta relativa en absoluta
+}
 
-const error = chalk.bold.red;
-const warning = chalk.keyword('orange');
+const exist = existPath(ruta);
 
-console.log(error('Error!'));
-console.log(warning('Warning!'));
-
-const name = 'Sindre';
-console.log(chalk.green('Hello %s'), name);
-
-const ctx = new chalk.Instance({ level: 0 });
+if (exist) { // Existe la ruta    
+    const esDirectorio = isDirectory(ruta);
+    if (esDirectorio) {
+        // Trabajamos con un directorio
+        log('Es un directorio');
+    } else {
+        // Trabajamos con un archivo
+        log('Es un archivo');
+    }
+} else {
+    log('No existe la ruta');
+}
