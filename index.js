@@ -2,7 +2,6 @@
 const chalk = require('chalk'); //dependencia para color y tipo de letra 
 const fetch = require('fetch'); //Obtener el contenido de la URL
 const figlet = require('figlet');
-
 const {
     validatePath,
     convertPathToAbsolute,
@@ -10,7 +9,7 @@ const {
     isDirectory,
     isMD
 } = require('./api');
-
+const { searchLink } = require('./cli');
 const log = console.log;
 
 module.exports = () => {
@@ -41,9 +40,13 @@ if (exist) { // Existe la ruta
     } else {
         // Trabajamos con un archivo
         const esMD = isMD(ruta);
+
         log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
         if (esMD) {
-            log('Es un archivo MD');
+            const search = searchLink(ruta);
+            search.then((messaje) => {
+                log(messaje);
+            });
         } else {
             log('No es un archivo MD');
         }
