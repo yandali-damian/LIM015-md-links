@@ -3,7 +3,13 @@ const chalk = require('chalk'); //dependencia para color y tipo de letra
 const fetch = require('fetch'); //Obtener el contenido de la URL
 const figlet = require('figlet');
 
-const { validatePath, convertPathToAbsolute, existPath, isDirectory } = require('./cli');
+const {
+    validatePath,
+    convertPathToAbsolute,
+    existPath,
+    isDirectory,
+    isMD
+} = require('./api');
 
 const log = console.log;
 
@@ -31,10 +37,16 @@ if (exist) { // Existe la ruta
     const esDirectorio = isDirectory(ruta);
     if (esDirectorio) {
         // Trabajamos con un directorio
-        log('Es un directorio');
+        log(chalk `{bold.rgb(90,700,900) Es un directorio!}`);
     } else {
         // Trabajamos con un archivo
-        log('Es un archivo');
+        const esMD = isMD(ruta);
+        log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
+        if (esMD) {
+            log('Es un archivo MD');
+        } else {
+            log('No es un archivo MD');
+        }
     }
 } else {
     log('No existe la ruta');
