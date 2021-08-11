@@ -9,7 +9,7 @@ const {
     isDirectory,
     isMD
 } = require('./api');
-const { searchLink } = require('./cli');
+const { mdlinks } = require('./cli');
 const log = console.log;
 
 module.exports = () => {
@@ -21,8 +21,8 @@ module.exports = () => {
 
 //Variables
 let ruta = process.argv[2];
-let opcionStatsOrValidate1 = process.argv[3];
-let opcionStatsOrValidate2 = process.argv[4];
+let opcionValidateOrStats = process.argv[3];
+let opcionStats = process.argv[4];
 
 const isAbsolute = validatePath(ruta);
 if (!isAbsolute) {
@@ -43,10 +43,35 @@ if (exist) { // Existe la ruta
 
         log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
         if (esMD) {
-            const search = searchLink(ruta);
-            search.then((messaje) => {
-                log(messaje);
-            });
+
+            if (opcionValidateOrStats == "--help") {
+                log("ayuda");
+            } else if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") {
+                mdlinks(ruta, { validate: true, stats: true }).then((arrayLinks) => { //Resolve
+                    log(arrayLinks);
+                }).catch((err) => { // Reject
+                    log(err);
+                });
+            } else if (opcionValidateOrStats === "--validate") {
+                mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve
+                    log(arrayLinks);
+                }).catch((err) => { // Reject
+                    log(err);
+                });
+            } else if (opcionValidateOrStats === "--stats") {
+                mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
+                    log(arrayLinks);
+                }).catch((err) => { // Reject
+                    log(err);
+                });
+            } else {
+                mdlinks(ruta, { validate: false }).then((arrayLinks) => { //Resolve
+                    arrayLinks.forEach((link) => log(link));
+                }).catch((err) => { // Reject
+                    log(err);
+                });
+            }
+
         } else {
             log('No es un archivo MD');
         }

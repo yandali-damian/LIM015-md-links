@@ -2,8 +2,7 @@ const {
     validatePath,
     convertPathToAbsolute,
     existPath,
-    isDirectory,
-    existArchive
+    isDirectory
 } = require('../api');
 
 
@@ -74,14 +73,5 @@ describe('isDirectory', () => {
         expect(isDirectory("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(false);
     });
 
-    describe('existArchive', () => {
-        it("Es una fiuncion", () => {
-            expect(typeof existArchive).toBe('function');
-        });
-
-        it("Si existe el archivo, mostrara true", () => {
-            expect(existArchive("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(true);
-        });
-    });
 
 });

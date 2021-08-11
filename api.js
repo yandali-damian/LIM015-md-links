@@ -33,10 +33,6 @@ const isMD = (ruta) => (path.extname(ruta) === ".md");
 // Funcion para leer directorio 
 //const readDirectorio = (ruta) => fs.readdirSync(ruta);
 
-// funcion para leer archivo .md y extraer los link
-
-
-
 
 module.exports = {
     validatePath,
