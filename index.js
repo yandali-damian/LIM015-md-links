@@ -25,9 +25,11 @@ let opcionValidateOrStats = process.argv[3];
 let opcionStats = process.argv[4];
 
 const isAbsolute = validatePath(ruta);
+// log(isAbsolute);
 if (!isAbsolute) {
     // No es Absoluta entonces convertirlo
     ruta = convertPathToAbsolute(ruta); // Convertir ruta relativa en absoluta
+    // log(ruta)
 }
 
 const exist = existPath(ruta);
@@ -47,20 +49,21 @@ if (exist) { // Existe la ruta
             if (opcionValidateOrStats == "--help") {
                 log("ayuda");
             } else if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") {
-                mdlinks(ruta, { validate: true, stats: true }).then((arrayLinks) => { //Resolve
-                    log(arrayLinks);
+                mdlinks(ruta, { validate: true, stats: true }).then((arrayLinks) => { //Resolve                    
+                    arrayLinks.forEach((link) => log(link));
                 }).catch((err) => { // Reject
                     log(err);
                 });
             } else if (opcionValidateOrStats === "--validate") {
-                mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve
-                    log(arrayLinks);
+                mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve                   
+                    arrayLinks.forEach((link) => log(link));
                 }).catch((err) => { // Reject
                     log(err);
                 });
             } else if (opcionValidateOrStats === "--stats") {
                 mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
-                    log(arrayLinks);
+                    // log(arrayLinks);
+                    arrayLinks.forEach((link) => log(link));
                 }).catch((err) => { // Reject
                     log(err);
                 });

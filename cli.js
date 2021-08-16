@@ -1,4 +1,6 @@
 const fs = require('fs');
+const fetch = require('node-fetch');
+const chalk = require('chalk');
 // resolve= retornar la respuesta
 // reject=retornar el error
 const searchLink = (ruta) => {
@@ -29,14 +31,14 @@ const searchLink = (ruta) => {
     return links;
 }
 
-const mdlinks = (ruta, options = {}) => {
+const mdlinks = (ruta, options) => {
     const links = searchLink(ruta);
 
     return new Promise((resolve, reject) => {
         if (options.validate === true && options.stats === true) {
             resolve("validate and stats");
         } else if (options.validate === true) {
-            resolve("validate");
+            Promise.all(optionValidate(links)).then((res) => resolve(res)); //Promise all -> Trabaja todas las promesas de la funcion optionValidate
         } else if (options.stats === true) {
             resolve("stats");
         } else {
@@ -45,11 +47,33 @@ const mdlinks = (ruta, options = {}) => {
     });
 }
 
+// funcnion para mostrar los links por defecto cuando no se para una opcion 
 const renderLinks = (links) => {
     return links.map(link => {
         return `${link.file} ${link.text} ${link.href}`;
     });
 }
+
+//funcion cuando pasamos la opcion --validate
+const optionValidate = ((links) => {
+
+    const statusOK = [200, 301];
+
+    return links.map(link => {
+        return fetch(link.href).then(res => { //fetch metodo que devuelve una promesa
+            // console.log(res);
+            if (statusOK.includes(res.status)) {
+                return `${link.file} ${link.text} ${chalk.blue(link.href)} ${res.status} ${chalk.green(res.statusText)}`;
+            } else {
+                return `${link.file} ${link.text} ${chalk.red(link.href)} ${chalk.red(res.status)} FAIL`;
+            }
+        }).catch(err => {
+            // console.log(err);
+            return `${link.file} ${link.text} ${chalk.red(link.href)} 500 FAIL`;
+        });
+    });
+
+});
 
 module.exports = {
     searchLink,

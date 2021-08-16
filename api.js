@@ -7,6 +7,7 @@ function validatePath(ruta) {
     return path.isAbsolute(ruta); // Retorna un booleano
 }
 
+
 // funcion para convertir la ruta de relativa a absoluta
 function convertPathToAbsolute(ruta) {
     return path.resolve(ruta); // Retorna un string
