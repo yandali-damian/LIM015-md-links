@@ -46,35 +46,39 @@ if (exist) { // Existe la ruta
         // log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
         if (esMD) {
 
-            if (opcionValidateOrStats == "--help") {
-                log("ayuda");
-            } else if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") {
-                mdlinks(ruta, { validate: true, stats: true }).then((arrayLinks) => { //Resolve                    
-                    // arrayLinks.forEach((link) => log(link));
-                    log(arrayLinks);
-                }).catch((err) => { // Reject
-                    log(err);
-                });
-            } else if (opcionValidateOrStats === "--validate") {
-                mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve                   
-                    arrayLinks.forEach((link) => log(link));
-                }).catch((err) => { // Reject
-                    log(err);
-                });
-            } else if (opcionValidateOrStats === "--stats") {
-                mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
-                    // log(arrayLinks);
-                    // arrayLinks.forEach((link) => log(link));
-                    log(arrayLinks);
-                }).catch((err) => { // Reject
-                    log(err);
-                });
+            if (opcionValidateOrStats === "--stats" && opcionStats === "--validate") { //Reglas de Opcion
+                log('Orden incorrecto de parametros... :(');
             } else {
-                mdlinks(ruta, { validate: false }).then((arrayLinks) => { //Resolve
-                    arrayLinks.forEach((link) => log(link));
-                }).catch((err) => { // Reject
-                    log(err);
-                });
+                if (opcionValidateOrStats == "--help") {
+                    log("ayuda");
+                } else if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") {
+                    mdlinks(ruta, { validate: true, stats: true }).then((arrayLinks) => { //Resolve                    
+                        // arrayLinks.forEach((link) => log(link));
+                        log(arrayLinks);
+                    }).catch((err) => { // Reject
+                        log(err);
+                    });
+                } else if (opcionValidateOrStats === "--validate") {
+                    mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve                   
+                        arrayLinks.forEach((link) => log(link));
+                    }).catch((err) => { // Reject
+                        log(err);
+                    });
+                } else if (opcionValidateOrStats === "--stats") {
+                    mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
+                        // log(arrayLinks);
+                        // arrayLinks.forEach((link) => log(link));
+                        log(arrayLinks);
+                    }).catch((err) => { // Reject
+                        log(err);
+                    });
+                } else {
+                    mdlinks(ruta, { validate: false }).then((arrayLinks) => { //Resolve
+                        arrayLinks.forEach((link) => log(link));
+                    }).catch((err) => { // Reject
+                        log(err);
+                    });
+                }
             }
 
         } else {
