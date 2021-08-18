@@ -43,14 +43,15 @@ if (exist) { // Existe la ruta
         // Trabajamos con un archivo
         const esMD = isMD(ruta);
 
-        log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
+        // log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
         if (esMD) {
 
             if (opcionValidateOrStats == "--help") {
                 log("ayuda");
             } else if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") {
                 mdlinks(ruta, { validate: true, stats: true }).then((arrayLinks) => { //Resolve                    
-                    arrayLinks.forEach((link) => log(link));
+                    // arrayLinks.forEach((link) => log(link));
+                    log(arrayLinks);
                 }).catch((err) => { // Reject
                     log(err);
                 });
@@ -63,7 +64,8 @@ if (exist) { // Existe la ruta
             } else if (opcionValidateOrStats === "--stats") {
                 mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
                     // log(arrayLinks);
-                    arrayLinks.forEach((link) => log(link));
+                    // arrayLinks.forEach((link) => log(link));
+                    log(arrayLinks);
                 }).catch((err) => { // Reject
                     log(err);
                 });

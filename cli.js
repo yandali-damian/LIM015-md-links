@@ -36,11 +36,11 @@ const mdlinks = (ruta, options) => {
 
     return new Promise((resolve, reject) => {
         if (options.validate === true && options.stats === true) {
-            resolve("validate and stats");
+            resolve(optionStatsValidate(links));
         } else if (options.validate === true) {
             Promise.all(optionValidate(links)).then((res) => resolve(res)); //Promise all -> Trabaja todas las promesas de la funcion optionValidate
         } else if (options.stats === true) {
-            resolve("stats");
+            resolve(optionStats(links));
         } else {
             resolve(renderLinks(links));
         }
@@ -57,12 +57,13 @@ const renderLinks = (links) => {
 //funcion cuando pasamos la opcion --validate
 const optionValidate = ((links) => {
 
-    const statusOK = [200, 301];
+    // const statusOK = [200, 301];
 
     return links.map(link => {
         return fetch(link.href).then(res => { //fetch metodo que devuelve una promesa
-            // console.log(res);
-            if (statusOK.includes(res.status)) {
+            // console.log(res);  
+            // if (statusOK.includes(res.status)) {
+            if ((res.status >= 200) && (res.status <= 399)) {
                 return `${link.file} ${link.text} ${chalk.blue(link.href)} ${res.status} ${chalk.green(res.statusText)}`;
             } else {
                 return `${link.file} ${link.text} ${chalk.red(link.href)} ${chalk.red(res.status)} FAIL`;
@@ -74,6 +75,40 @@ const optionValidate = ((links) => {
     });
 
 });
+
+const optionStats = ((links) => {
+
+    let newArray = links.map(link => {
+        return link.href;
+        // console.log(link.href);
+    });
+
+    return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} `; //construir una arreglo de b
+    // onsole.log(newArray.length);
+    // console.log([...new Set(newArray)].length);c
+});
+
+const optionStatsValidate = async(links) => {
+    let contBroken = 0;
+
+    let newArray = links.map(link => {
+        return link.href;
+        // console.log(link.href);
+    });
+
+    await Promise.all(
+        newArray.map(href => {
+            return fetch(href).then(res => {
+                return res.statusText;
+            }).catch(err => { return "FAIL"; });
+        })
+    ).then(res => {
+        if (res != 'OK')
+            contBroken++;
+    });
+
+    return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} \nBroquen: ${contBroken}`;
+};
 
 module.exports = {
     searchLink,
