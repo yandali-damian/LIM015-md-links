@@ -55,7 +55,7 @@ const mdlinks = (ruta, options) => {
             }
         } else {
             // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
-            resolve(chalk.red.bold("\n ❌ No se encontró ningun links en el archivo ☹️"));
+            resolve(["\n " + ruta + chalk.red.bold(" ❌ No se encontró ningun links en el archivo ☹️")]);
         }
     });
 
