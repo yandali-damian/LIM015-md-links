@@ -73,12 +73,23 @@ if (exist) { // Existe la ruta
 
     if (archivosParaProcesar.length > 0) {
         if (opcionValidateOrStats === "--stats" && opcionStats === "--validate") {
-            mdlinks(ruta, { stats: true, validate: true }).then((arrayLinks) => { //Resolve                    
-                // arrayLinks.forEach((link) => log(link));
-                log(`Total: ${arrayLinks.Total} \nUnique: ${arrayLinks.Unique} \nBroquen:${arrayLinks.Broquen}`);
-            }).catch((err) => { // Reject
-                log(err);
+            Promise.all(
+                archivosParaProcesar.map(rutaLeer => {
+                    return mdlinks(rutaLeer, { stats: true, validate: true }).then((arrayLinks) => { //Resolve                    
+                        // arrayLinks.forEach((link) => log(link));
+                        return arrayLinks;
+                    }).catch((err) => { // Reject
+                        log(err);
+                    });
+                })
+            ).then(res => {
+                //Totalizado
+                var total = res.map(item => item.Total).reduce((a, b) => a + b);
+                var unique = res.map(item => item.Unique).reduce((a, b) => a + b);
+                var broquen = res.map(item => item.Broquen).reduce((a, b) => a + b);
+                log(`Total: ${total} \nUnique: ${unique} \nBroquen:${broquen}`);
             });
+
         } else if (opcionValidateOrStats === "--validate") {
             archivosParaProcesar.forEach(rutaLeer => {
                 mdlinks(rutaLeer, { validate: true }).then((arrayLinks) => { //Resolve                   
@@ -88,11 +99,20 @@ if (exist) { // Existe la ruta
                 });
             });
         } else if (opcionValidateOrStats === "--stats") {
-            mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
-                // log(arrayLinks);
-                log(`Total: ${arrayLinks.Total} \nUnique: ${arrayLinks.Unique}`);
-            }).catch((err) => { // Reject
-                log(err);
+            Promise.all(
+                archivosParaProcesar.map(rutaLeer => {
+                    return mdlinks(rutaLeer, { stats: true }).then((arrayLinks) => { //Resolve
+                        // log(arrayLinks);
+                        return arrayLinks;
+                    }).catch((err) => { // Reject
+                        log(err);
+                    })
+                })
+            ).then(res => {
+                //Totalizado
+                var total = res.map(item => item.Total).reduce((a, b) => a + b);
+                var unique = res.map(item => item.Unique).reduce((a, b) => a + b);
+                log(`Total: ${total} \nUnique: ${unique}`);
             });
         } else {
             archivosParaProcesar.forEach(rutaLeer => {

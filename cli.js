@@ -42,21 +42,27 @@ const mdlinks = (ruta, options) => {
 
     return new Promise((resolve, reject) => {
 
-        if (links.length > 0) {
-            if (options.validate === true && options.stats === true) {
-                resolve(optionStatsValidate(links));
-                // console.log(optionStatsValidate(links));
-            } else if (options.validate === true) {
+        if (options.validate === true && options.stats === true) {
+            resolve(optionStatsValidate(links));
+            // console.log(optionStatsValidate(links));
+        } else if (options.validate === true) {
+            if (links.length > 0) {
                 Promise.all(optionValidate(links)).then((res) => resolve(res)); //Promise all -> Trabaja todas las promesas de la funcion optionValidate
-            } else if (options.stats === true) {
-                resolve(optionStats(links));
             } else {
-                resolve(renderLinks(links));
+                // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
+                resolve(["\n " + ruta + chalk.red.bold(" ❌ No se encontró ningun links en el archivo ☹️")]);
             }
+        } else if (options.stats === true) {
+            resolve(optionStats(links));
         } else {
-            // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
-            resolve(["\n " + ruta + chalk.red.bold(" ❌ No se encontró ningun links en el archivo ☹️")]);
+            if (links.length > 0) {
+                resolve(renderLinks(links));
+            } else {
+                // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
+                resolve(["\n " + ruta + chalk.red.bold(" ❌ No se encontró ningun links en el archivo ☹️")]);
+            }
         }
+
     });
 
 
@@ -92,7 +98,6 @@ const optionValidate = ((links) => {
 });
 
 const optionStats = ((links) => {
-
     let newArray = links.map(link => {
         return link.href;
         // console.log(link.href);
