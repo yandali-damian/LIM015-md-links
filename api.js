@@ -23,13 +23,14 @@ function existPath(ruta) {
     }
 }
 
+//Función que filtra archivos con extención .md
+const isMD = (ruta) => (path.extname(ruta) === ".md");
+
+
 // funcion para verificar si es directorio
 function isDirectory(ruta) {
     return fs.lstatSync(ruta).isDirectory();
 }
-
-//Función que filtra archivos con extención .md
-const isMD = (ruta) => (path.extname(ruta) === ".md");
 
 // Funcion para leer directorio 
 //const readDirectorio = (ruta) => fs.readdirSync(ruta);

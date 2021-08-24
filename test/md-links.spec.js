@@ -2,7 +2,8 @@ const {
     validatePath,
     convertPathToAbsolute,
     existPath,
-    isDirectory
+    isDirectory,
+    isMD
 } = require('../api');
 
 
@@ -13,6 +14,8 @@ const {
 //     });
 
 // });
+
+// ********************** test de API **********************
 
 describe('validatePath', () => {
 
@@ -71,6 +74,23 @@ describe('isDirectory', () => {
 
     it('Si es un Archivo debería retornar False', () => {
         expect(isDirectory("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(false);
+    });
+
+
+});
+
+describe('isMD', () => {
+
+    it('Es una función', () => {
+        expect(typeof isMD).toBe('function');
+    });
+
+    it('Si es un archivo .MD debera retornar true', () => {
+        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(true);
+    });
+
+    it('Si es un Archivo debería retornar False', () => {
+        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba.txt")).toBe(false);
     });
 
 

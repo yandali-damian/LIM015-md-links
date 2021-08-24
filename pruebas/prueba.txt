@@ -1,5 +1,30 @@
-lista de frutas
-platano
-manzana
-pera
-fresa
+¿Qué hicimos bien?
+
+- Llegue a cumplir lo que tenia planeado para este sprint
+- Avanzar el proyectosin presionales
+- Estoy aprendiendo a manejar el estres a mi favor(en los momentos donde me 
+encuentro frustada por que no llegue a solucionar una funcion me retiro 
+por unas horas y me pongo a revisar la parte teorica y me ayuda a reflexionar 
+sobre lo que tengo q hacer)
+
+¿Qué pudimos hacer mejor?
+
+- Cuando me demoro muchas horas en un mismo problema pedir ayuda a mis compañeras 
+que ya realizaron o terminaron el proyecto.
+
+¿Qué cosa nueva debemos empezar a hacer?
+
+- Darle un poquito mas de vida en la visualizacion(Nunca esta demas el hecho que los resultados 
+se vean llamativos por mas que sea en consola)
+- seguir utilizando el Hit hub Projects
+
+Identificar 1 cosa que mejorar (individual)
+
+- dejar la preocupacion  por el tiempo que me demanda en hacer el proyecto 
+- dejar de frustrarme si no logro hacer durante el dia lo que tenia planeado
+- dejar fluir el avnace 
+
+Identifica 1 logro personal alcanzado
+- Aprender sobre promesas 
+- Tener mas claro como se trabaja en Modulos
+- Estoy acostumbrandome a usar mucho mejor el nombre de mis variables/funciones en ingles

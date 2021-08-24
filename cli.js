@@ -1,8 +1,10 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
+const emoji = require('node-emoji');
 // resolve= retornar la respuesta
 // reject=retornar el error
+
 const searchLink = (ruta) => {
     let links = []; //array de salida
 
@@ -31,26 +33,39 @@ const searchLink = (ruta) => {
     return links;
 }
 
+
+
 const mdlinks = (ruta, options) => {
+
+    // console.log(searchLink(ruta));
     const links = searchLink(ruta);
 
     return new Promise((resolve, reject) => {
-        if (options.validate === true && options.stats === true) {
-            resolve(optionStatsValidate(links));
-        } else if (options.validate === true) {
-            Promise.all(optionValidate(links)).then((res) => resolve(res)); //Promise all -> Trabaja todas las promesas de la funcion optionValidate
-        } else if (options.stats === true) {
-            resolve(optionStats(links));
+
+        if (links.length > 0) {
+            if (options.validate === true && options.stats === true) {
+                resolve(optionStatsValidate(links));
+                // console.log(optionStatsValidate(links));
+            } else if (options.validate === true) {
+                Promise.all(optionValidate(links)).then((res) => resolve(res)); //Promise all -> Trabaja todas las promesas de la funcion optionValidate
+            } else if (options.stats === true) {
+                resolve(optionStats(links));
+            } else {
+                resolve(renderLinks(links));
+            }
         } else {
-            resolve(renderLinks(links));
+            // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
+            console.log(chalk.red.bold("\n ❌ No se encontró ningun links en el archivo ☹️"));
         }
     });
+
+
 }
 
 // funcnion para mostrar los links por defecto cuando no se para una opcion 
 const renderLinks = (links) => {
-    return links.map(link => {
-        return `${link.file} ${link.text} ${link.href}`;
+        return links.map(link => {
+                    return `\n ${chalk.bold(`${link.file} ${chalk.blue(link.href)} ${link.text}`)}`;
     });
 }
 
@@ -88,7 +103,7 @@ const optionStats = ((links) => {
     // console.log([...new Set(newArray)].length);c
 });
 
-const optionStatsValidate = async(links) => {
+const optionStatsValidate = ((links) => {
     let contBroken = 0;
 
     let newArray = links.map(link => {
@@ -96,19 +111,24 @@ const optionStatsValidate = async(links) => {
         // console.log(link.href);
     });
 
-    await Promise.all(
+    return Promise.all(
         newArray.map(href => {
             return fetch(href).then(res => {
                 return res.statusText;
             }).catch(err => { return "FAIL"; });
-        })
+        }),
     ).then(res => {
-        if (res != 'OK')
-            contBroken++;
-    });
+        // console.log({ res });
+        // console.log(res.filter(broquen => {
+        //     return broquen === 'FAIL';
+        // }).length);
 
-    return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} \nBroquen: ${contBroken}`;
-};
+        contBroken = res.filter(broquen => {
+            return broquen === 'FAIL';
+        }).length;
+        return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} \nBroquen:${contBroken}`;
+    });
+});
 
 module.exports = {
     searchLink,
