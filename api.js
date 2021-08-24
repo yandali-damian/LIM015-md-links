@@ -33,7 +33,16 @@ function isDirectory(ruta) {
 }
 
 // Funcion para leer directorio 
-//const readDirectorio = (ruta) => fs.readdirSync(ruta);
+const readDirectorio = (ruta) => {
+    let dirContent = fs.readdirSync(ruta); //Leer Directorio
+
+    const filesMD = dirContent.filter(elem => { //Buscar todos los archivos MD
+        return isMD(elem);
+    });
+
+    //console.log(filesMD);
+    return filesMD.map(md => path.join(ruta, md)); //Unir con la ruta directorio a cada nombre de archivo
+};
 
 
 module.exports = {
@@ -41,7 +50,8 @@ module.exports = {
     convertPathToAbsolute,
     existPath,
     isDirectory,
-    isMD
+    isMD,
+    readDirectorio
 };
 
 // ./pruebas/prueba1.md                         Relativa

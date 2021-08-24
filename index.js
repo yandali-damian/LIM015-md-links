@@ -10,7 +10,8 @@ const {
     convertPathToAbsolute,
     existPath,
     isDirectory,
-    isMD
+    isMD,
+    readDirectorio
 } = require('./api');
 const { mdlinks } = require('./cli');
 const log = console.log;
@@ -23,6 +24,21 @@ let ruta = process.argv[2];
 let opcionValidateOrStats = process.argv[3];
 let opcionStats = process.argv[4];
 
+const help = `**********************************************************************************************************************************
+${colors.cyan.bold('Puede usar las siguientes opciones:')}
+${colors.yellow('--stats')} se utiliza para obtener el número total de links y los que no se repiten (links únicos).
+${colors.green('--validate')} se utiliza para validar cada link (si es OK o FAIL, dependiendo del estado) también obtener su href, texto y archivo.
+${colors.magenta('--stats --validate')} Tambien puede ingresar ambas opciones y obtendra como resultado el total de links, únicos y rotos
+En caso de que no use ninguna opción, solo debe ingresar la${colors.cyan(' ruta')} y tendra como resultado href, el texto y el archivo de cada link.
+**********************************************************************************************************************************`;
+
+//Validaciones
+if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") { //Reglas de Opcion
+    log(chalk.red.bold('\n❌ Orden incorrecto de opciones... ☝️ '));
+} else if (opcionValidateOrStats == "--help") {
+    log(help);
+}
+
 const isAbsolute = validatePath(ruta);
 // log(isAbsolute);
 if (!isAbsolute) {
@@ -33,19 +49,18 @@ if (!isAbsolute) {
 
 const exist = existPath(ruta);
 
-const help = `**********************************************************************************************************************************
-${colors.cyan.bold('Puede usar las siguientes opciones:')}
-${colors.yellow('--stats')} se utiliza para obtener el número total de links y los que no se repiten (links únicos).
-${colors.green('--validate')} se utiliza para validar cada link (si es OK o FAIL, dependiendo del estado) también obtener su href, texto y archivo.
-${colors.magenta('--stats --validate')} Tambien puede ingresar ambas opciones y obtendra como resultado el total de links, únicos y rotos
-En caso de que no use ninguna opción, solo debe ingresar la${colors.cyan(' ruta')} y tendra como resultado href, el texto y el archivo de cada link.
-**********************************************************************************************************************************`;
-
 if (exist) { // Existe la ruta    
     const esDirectorio = isDirectory(ruta);
     if (esDirectorio) {
         // Trabajamos con un directorio
-        log(chalk `{bold.rgb(90,700,900) Es un directorio!}`);
+        //log(chalk `{bold.rgb(90,700,900) Es un directorio!}`);
+
+        const filesMD = readDirectorio(ruta);
+
+        filesMD.forEach(file => {
+            log(file);
+        });
+
     } else {
         // Trabajamos con un archivo
         const esMD = isMD(ruta);
@@ -53,40 +68,32 @@ if (exist) { // Existe la ruta
         // log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
         if (esMD) {
 
-            if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") { //Reglas de Opcion
-                log(chalk.red.bold('\n❌ Orden incorrecto de opciones... ☝️ '));
+            if (opcionValidateOrStats === "--stats" && opcionStats === "--validate") {
+                mdlinks(ruta, { stats: true, validate: true }).then((arrayLinks) => { //Resolve                    
+                    // arrayLinks.forEach((link) => log(link));
+                    log(`Total: ${arrayLinks.Total} \nUnique: ${arrayLinks.Unique} \nBroquen:${arrayLinks.Broquen}`);
+                }).catch((err) => { // Reject
+                    log(err);
+                });
+            } else if (opcionValidateOrStats === "--validate") {
+                mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve                   
+                    arrayLinks.forEach((link) => log(link));
+                }).catch((err) => { // Reject
+                    log(err);
+                });
+            } else if (opcionValidateOrStats === "--stats") {
+                mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
+                    // log(arrayLinks);
+                    log(`Total: ${arrayLinks.Total} \nUnique: ${arrayLinks.Unique}`);
+                }).catch((err) => { // Reject
+                    log(err);
+                });
             } else {
-                if (opcionValidateOrStats == "--help") {
-                    log(help);
-
-                } else if (opcionValidateOrStats === "--stats" && opcionStats === "--validate") {
-                    mdlinks(ruta, { stats: true, validate: true }).then((arrayLinks) => { //Resolve                    
-                        // arrayLinks.forEach((link) => log(link));
-                        log(arrayLinks);
-                    }).catch((err) => { // Reject
-                        log(err);
-                    });
-                } else if (opcionValidateOrStats === "--validate") {
-                    mdlinks(ruta, { validate: true }).then((arrayLinks) => { //Resolve                   
-                        arrayLinks.forEach((link) => log(link));
-                    }).catch((err) => { // Reject
-                        log(err);
-                    });
-                } else if (opcionValidateOrStats === "--stats") {
-                    mdlinks(ruta, { stats: true }).then((arrayLinks) => { //Resolve
-                        // log(arrayLinks);
-                        log(arrayLinks);
-                    }).catch((err) => { // Reject
-                        log(err);
-                    });
-                } else {
-                    mdlinks(ruta, { validate: false }).then((arrayLinks) => { //Resolve
-                        arrayLinks.forEach((link) => log(link));
-                    }).catch((err) => { // Reject
-                        log(err);
-                    });
-
-                }
+                mdlinks(ruta, { validate: false }).then((arrayLinks) => { //Resolve
+                    arrayLinks.forEach((link) => log(link));
+                }).catch((err) => { // Reject
+                    log(err);
+                });
             }
 
         } else {

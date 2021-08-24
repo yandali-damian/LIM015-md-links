@@ -55,7 +55,7 @@ const mdlinks = (ruta, options) => {
             }
         } else {
             // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
-            console.log(chalk.red.bold("\n ❌ No se encontró ningun links en el archivo ☹️"));
+            resolve(chalk.red.bold("\n ❌ No se encontró ningun links en el archivo ☹️"));
         }
     });
 
@@ -98,7 +98,8 @@ const optionStats = ((links) => {
         // console.log(link.href);
     });
 
-    return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} `; //construir una arreglo de b
+    return { Total: newArray.length, Unique : [...new Set(newArray)].length };
+    //return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length}`; //construir una arreglo de b
     // onsole.log(newArray.length);
     // console.log([...new Set(newArray)].length);c
 });
@@ -126,7 +127,8 @@ const optionStatsValidate = ((links) => {
         contBroken = res.filter(broquen => {
             return broquen === 'FAIL';
         }).length;
-        return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} \nBroquen:${contBroken}`;
+        return { Total: newArray.length, Unique: [...new Set(newArray)].length, Broquen:contBroken };
+        //return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} \nBroquen:${contBroken}`;
     });
 });
 
