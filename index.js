@@ -1,9 +1,6 @@
 // importando paquetes de node.js
-const chalk = require('chalk'); //dependencia para color y tipo de letra 
-const fetch = require('fetch'); //Obtener el contenido de la URL
-const figlet = require('figlet');
+const chalk = require('chalk'); //dependencia para color y tipo de letra
 const colors = require('colors');
-const { emoji } = require('node-emoji');
 
 const {
     validatePath,
@@ -11,9 +8,10 @@ const {
     existPath,
     isDirectory,
     isMD,
-    readDirectorio
+    // readDirectorio
+    getAllFiles
 } = require('./api');
-const { mdlinks } = require('./cli');
+const { mdlinks } = require('./mdlinks');
 const log = console.log;
 
 // log(process.env);
@@ -24,20 +22,13 @@ let ruta = process.argv[2];
 let opcionValidateOrStats = process.argv[3];
 let opcionStats = process.argv[4];
 
-const help = `**********************************************************************************************************************************
+const help = `\n**********************************************************************************************************************************
 ${colors.cyan.bold('Puede usar las siguientes opciones:')}
 ${colors.yellow('--stats')} se utiliza para obtener el número total de links y los que no se repiten (links únicos).
 ${colors.green('--validate')} se utiliza para validar cada link (si es OK o FAIL, dependiendo del estado) también obtener su href, texto y archivo.
 ${colors.magenta('--stats --validate')} Tambien puede ingresar ambas opciones y obtendra como resultado el total de links, únicos y rotos
 En caso de que no use ninguna opción, solo debe ingresar la${colors.cyan(' ruta')} y tendra como resultado href, el texto y el archivo de cada link.
 **********************************************************************************************************************************`;
-
-//Validaciones
-if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") { //Reglas de Opcion
-    log(chalk.red.bold('\n❌ Orden incorrecto de opciones... ☝️ '));
-} else if (opcionValidateOrStats == "--help") {
-    log(help);
-}
 
 const isAbsolute = validatePath(ruta);
 // log(isAbsolute);
@@ -49,29 +40,34 @@ if (!isAbsolute) {
 
 const exist = existPath(ruta);
 
+
 if (exist) { // Existe la ruta    
     let archivosParaProcesar = [];
 
     const esDirectorio = isDirectory(ruta);
     if (esDirectorio) {
-        // Trabajamos con un directorio
-        //log(chalk `{bold.rgb(90,700,900) Es un directorio!}`);
-
-        const filesMD = readDirectorio(ruta);
+        // Trabajamos con un directori
+        // console.log(getAllFiles(ruta));
+        // const filesMD = readDirectorio(ruta);
+        const filesMD = getAllFiles(ruta);
+        //log(filesMD);
         archivosParaProcesar = filesMD;
     } else {
         // Trabajamos con un archivo
         const esMD = isMD(ruta);
 
-        // log(chalk `{bold.rgb(50,500,00) Es un Archivo!}`);
         if (esMD) {
             archivosParaProcesar.push(ruta);
         } else {
             log(chalk.red.bold('\n ❌ No es un archivo .MD ✉️'));
         }
     }
-
-    if (archivosParaProcesar.length > 0) {
+    //Validaciones
+    if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") { //Reglas de Opcion
+        log(chalk.red.bold('\n❌ Orden incorrecto de opciones... ☝️ '));
+    } else if (opcionValidateOrStats == "--help") {
+        log(help);
+    } else if (archivosParaProcesar.length > 0) {
         if (opcionValidateOrStats === "--stats" && opcionStats === "--validate") {
             Promise.all(
                 archivosParaProcesar.map(rutaLeer => {
@@ -83,11 +79,12 @@ if (exist) { // Existe la ruta
                     });
                 })
             ).then(res => {
+                // log(res);
                 //Totalizado
-                var total = res.map(item => item.Total).reduce((a, b) => a + b);
-                var unique = res.map(item => item.Unique).reduce((a, b) => a + b);
-                var broquen = res.map(item => item.Broquen).reduce((a, b) => a + b);
-                log(`Total: ${total} \nUnique: ${unique} \nBroquen:${broquen}`);
+                const total = res.map(item => item.Total).reduce((a, b) => a + b);
+                const unique = res.map(item => item.Unique).reduce((a, b) => a + b);
+                const broquen = res.map(item => item.Broquen).reduce((a, b) => a + b);
+                log(`Total: ${total} \nUnique: ${unique} \nBroquen: ${broquen}`);
             });
 
         } else if (opcionValidateOrStats === "--validate") {
@@ -110,8 +107,8 @@ if (exist) { // Existe la ruta
                 })
             ).then(res => {
                 //Totalizado
-                var total = res.map(item => item.Total).reduce((a, b) => a + b);
-                var unique = res.map(item => item.Unique).reduce((a, b) => a + b);
+                const total = res.map(item => item.Total).reduce((a, b) => a + b);
+                const unique = res.map(item => item.Unique).reduce((a, b) => a + b);
                 log(`Total: ${total} \nUnique: ${unique}`);
             });
         } else {

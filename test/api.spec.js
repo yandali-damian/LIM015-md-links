@@ -3,7 +3,8 @@ const {
     convertPathToAbsolute,
     existPath,
     isDirectory,
-    isMD
+    isMD,
+    readDirectorio
 } = require('../api');
 
 
@@ -62,6 +63,23 @@ describe('existPath', () => {
 
 });
 
+describe('isMD', () => {
+
+    it('Es una función', () => {
+        expect(typeof isMD).toBe('function');
+    });
+
+    it('Si es un archivo .MD debera retornar true', () => {
+        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(true);
+    });
+
+    it('Si es un Archivo debería retornar False', () => {
+        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba.txt")).toBe(false);
+    });
+
+
+});
+
 describe('isDirectory', () => {
 
     it('Es una función', () => {
@@ -79,19 +97,19 @@ describe('isDirectory', () => {
 
 });
 
-describe('isMD', () => {
+describe('readDirectorio', () => {
 
     it('Es una función', () => {
-        expect(typeof isMD).toBe('function');
+        expect(typeof readDirectorio).toBe('function');
     });
 
-    it('Si es un archivo .MD debera retornar true', () => {
-        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(true);
-    });
+    // it('Si es un Directorio debería retornar True', () => {
+    //     expect(isDirectory("H:/Laboratoria/MD-links/LIM015-md-links")).toBe(true);
+    // });
 
-    it('Si es un Archivo debería retornar False', () => {
-        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba.txt")).toBe(false);
-    });
+    // it('Si es un Archivo debería retornar False', () => {
+    //     expect(isDirectory("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(false);
+    // });
 
 
 });

@@ -1,10 +1,10 @@
 const fs = require('fs');
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); //Obtener el contenido de la URL
 const chalk = require('chalk');
-const emoji = require('node-emoji');
 // resolve= retornar la respuesta
 // reject=retornar el error
 
+//funcion para extraer el links
 const searchLink = (ruta) => {
     let links = []; //array de salida
 
@@ -34,41 +34,7 @@ const searchLink = (ruta) => {
 }
 
 
-
-const mdlinks = (ruta, options) => {
-
-    // console.log(searchLink(ruta));
-    const links = searchLink(ruta);
-
-    return new Promise((resolve, reject) => {
-
-        if (options.validate === true && options.stats === true) {
-            resolve(optionStatsValidate(links));
-            // console.log(optionStatsValidate(links));
-        } else if (options.validate === true) {
-            if (links.length > 0) {
-                Promise.all(optionValidate(links)).then((res) => resolve(res)); //Promise all -> Trabaja todas las promesas de la funcion optionValidate
-            } else {
-                // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
-                resolve(["\n " + ruta + chalk.red.bold(" ❌ No se encontró ningun links en el archivo ☹️")]);
-            }
-        } else if (options.stats === true) {
-            resolve(optionStats(links));
-        } else {
-            if (links.length > 0) {
-                resolve(renderLinks(links));
-            } else {
-                // console.log(`\n` + "⏳" + chalk.bold("... No se encontró" + chalk.blue(" links") + " en el archivo❗️ "));
-                resolve(["\n " + ruta + chalk.red.bold(" ❌ No se encontró ningun links en el archivo ☹️")]);
-            }
-        }
-
-    });
-
-
-}
-
-// funcnion para mostrar los links por defecto cuando no se para una opcion 
+// funcnion para mostrar los links por defecto cuando no se ingresa una opcion 
 const renderLinks = (links) => {
         return links.map(link => {
                     return `\n ${chalk.bold(`${link.file} ${chalk.blue(link.href)} ${link.text}`)}`;
@@ -83,32 +49,32 @@ const optionValidate = ((links) => {
     return links.map(link => {
         return fetch(link.href).then(res => { //fetch metodo que devuelve una promesa
             // console.log(res);  
-            // if (statusOK.includes(res.status)) {
             if ((res.status >= 200) && (res.status <= 399)) {
-                return `${link.file} ${link.text} ${chalk.blue(link.href)} ${res.status} ${chalk.green(res.statusText)}`;
+                // return `\n✔️  ${link.file} ${link.text} ${chalk.blue(link.href)} ${res.status} ${chalk.green(res.statusText)}`;
+            return `${chalk.rgb(40, 255, 191)(link.file)} ${chalk.rgb(188, 255, 185)(link.href)} ${chalk.rgb(2, 252, 99)(res.status)} ${chalk.rgb(2, 252, 99)(res.statusText)} ${chalk.rgb(247, 230, 173)(link.text)}`
             } else {
-                return `${link.file} ${link.text} ${chalk.red(link.href)} ${chalk.red(res.status)} FAIL`;
+                // return `\n❌ ${link.file} ${link.text} ${chalk.red(link.href)} ${chalk.red(res.status)} FAIL`;
+                return `${chalk.rgb(40, 255, 191)(link.file)} ${chalk.rgb(188, 255, 185)(link.href)} ${chalk.red(res.status)} ${chalk.red("FAIL")} ${chalk.rgb(247, 230, 173)(link.text)}`;
             }
         }).catch(err => {
             // console.log(err);
-            return `${link.file} ${link.text} ${chalk.red(link.href)} 500 FAIL`;
+            // return `\n❌ ${link.file} ${link.text} ${chalk.red(link.href)} 500 FAIL`;
+            return `${chalk.rgb(40, 255, 191)(link.file)} ${chalk.rgb(188, 255, 185)(link.href)} ${chalk.rgb(255, 0, 0)("500 FAIL")} ${chalk.rgb(247, 230, 173)(link.text)}`;
         });
     });
-
 });
 
+//funcion cuando pasamos la opcion --stats
 const optionStats = ((links) => {
     let newArray = links.map(link => {
         return link.href;
         // console.log(link.href);
     });
 
-    return { Total: newArray.length, Unique : [...new Set(newArray)].length };
-    //return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length}`; //construir una arreglo de b
-    // onsole.log(newArray.length);
-    // console.log([...new Set(newArray)].length);c
+    return {Total: newArray.length, Unique : [...new Set(newArray)].length};
 });
 
+//funcion cuando pasamos la opcion --stats --validate
 const optionStatsValidate = ((links) => {
     let contBroken = 0;
 
@@ -120,24 +86,26 @@ const optionStatsValidate = ((links) => {
     return Promise.all(
         newArray.map(href => {
             return fetch(href).then(res => {
-                return res.statusText;
+                if ((res.status >= 200) && (res.status <= 399)){
+                    return res.statusText;
+                }else{                    
+                    return 'FAIL';
+                }
             }).catch(err => { return "FAIL"; });
         }),
     ).then(res => {
-        // console.log({ res });
-        // console.log(res.filter(broquen => {
-        //     return broquen === 'FAIL';
-        // }).length);
-
+        // console.log(res);
         contBroken = res.filter(broquen => {
             return broquen === 'FAIL';
         }).length;
         return { Total: newArray.length, Unique: [...new Set(newArray)].length, Broquen:contBroken };
-        //return `Total: ${newArray.length} \nUnique: ${[...new Set(newArray)].length} \nBroquen:${contBroken}`;
     });
 });
 
 module.exports = {
     searchLink,
-    mdlinks
+    renderLinks,
+    optionValidate,
+    optionStats,
+    optionStatsValidate
 };

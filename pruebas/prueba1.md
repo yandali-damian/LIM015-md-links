@@ -1,7 +1,5 @@
 # prueba1
 
-- [Arreglos](https://curriculum.laboratoria.la/es/topics/javascript/04-arrays)
-- [Array - MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/)
-- [Google](https://www.googleeeee.co/)
-- [Arreglos](https://curriculum.laboratoria.la/es/topics/javascript/04-arrays)
-- [Arreglos 2](https://curriculum.laboratoria.la/es/topics/javascript/04-arrays)
+- [facebook](https://www.facebook.com/)
+- [WebSite](http://mywebsite/api/user/13)
+- [html5 css3](https://platzi.com/clases/html5-css3/)
