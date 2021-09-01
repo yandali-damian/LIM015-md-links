@@ -1,67 +1,44 @@
 const {
-    searchLink,
-    mdlinks
+    renderLinks,
+    optionValidate,
+    optionStats,
+    optionStatsValidate
 } = require('../cli');
-//  ******************** VARIABLES PARA EL TEST  agregar un nuevo archivo para las variables ********************
-const validateFalse = [{
-        text: 'Arreglos',
-        href: 'https://curriculum.laboratoria.la/es/topics/javascript/04-arrays',
-        file: 'H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md'
-    },
-    {
-        text: 'Array - MDN',
-        href: 'https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/',
-        file: 'H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md'
-    }
-];
 
 // ********************** test de CLI **********************
-describe('searchLink', () => {
 
-    const ruta = [{
-            text: 'Arreglos',
-            href: 'https://curriculum.laboratoria.la/es/topics/javascript/04-arrays',
-            file: 'H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md'
-        },
-        {
-            text: 'Array - MDN',
-            href: 'https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/',
-            file: 'H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md'
-        },
-        {
-            text: 'Google',
-            href: 'https://www.googleeeee.co/',
-            file: 'H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md'
-        },
-        {
-            text: 'Arreglos',
-            href: 'https://curriculum.laboratoria.la/es/topics/javascript/04-arrays',
-            file: 'H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md'
-        }
+describe('renderLinks', () => {
+    const arraySalida = [
+        '\x1B[1mH:\\Laboratoria\\MD-links\\LIM015-md-links\\pruebas\\pruebas1\\OTRA\\nuevo.md \x1B[34mhttps://platzi.com/clases/html5-css3/\x1B[39m html5 css3\x1B[22m'
     ];
+    const ArrayEntrada = [{
+        file: 'H:\\Laboratoria\\MD-links\\LIM015-md-links\\pruebas\\pruebas1\\OTRA\\nuevo.md',
+        href: 'https://platzi.com/clases/html5-css3/',
+        text: 'html5 css3'
+    }];
 
     it('Es una función', () => {
-        expect(typeof searchLink).toBe('function');
+        expect(typeof renderLinks).toBe('function');
     });
 
-    it('Al recorrer el rchivo MD debera retornar la funcion searchLink un Array de objetos de los links ', () => {
-        expect(searchLink("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toEqual(ruta);
-    });
-
-    it('Si no existe links en el archivo debera retornar array vacio []', () => {
-        expect(searchLink("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba2.md")).toEqual([]);
+    test('cuando ingresamos una ruta debera devolvernos un array con los links', () => {
+        expect(renderLinks(ArrayEntrada)).toEqual(arraySalida);
     });
 
 });
 
-describe('mdlinks', () => {
+describe('optionStats', () => {
 
     it('Es una función', () => {
-        expect(typeof mdlinks).toBe('function');
+        expect(typeof optionStats).toBe('function');
     });
 
-    test('', () => {
-        expect(searchLink("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toEqual(validateFalse);
+});
+
+describe('optionStatsValidate', () => {
+
+    it('Es una función', () => {
+        expect(typeof optionStatsValidate).toBe('function');
     });
 
 });

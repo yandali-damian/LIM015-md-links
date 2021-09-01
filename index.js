@@ -8,7 +8,7 @@ const {
     existPath,
     isDirectory,
     isMD,
-    // readDirectorio
+    // readDirectorio,
     getAllFiles
 } = require('./api');
 const { mdlinks } = require('./mdlinks');
@@ -40,7 +40,6 @@ if (!isAbsolute) {
 
 const exist = existPath(ruta);
 
-
 if (exist) { // Existe la ruta    
     let archivosParaProcesar = [];
 
@@ -48,7 +47,6 @@ if (exist) { // Existe la ruta
     if (esDirectorio) {
         // Trabajamos con un directori
         // console.log(getAllFiles(ruta));
-        // const filesMD = readDirectorio(ruta);
         const filesMD = getAllFiles(ruta);
         //log(filesMD);
         archivosParaProcesar = filesMD;

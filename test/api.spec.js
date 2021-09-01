@@ -2,19 +2,12 @@ const {
     validatePath,
     convertPathToAbsolute,
     existPath,
+    archive,
     isDirectory,
     isMD,
-    readDirectorio
+    readDirectorio,
+    getAllFiles
 } = require('../api');
-
-
-// describe('mdLinks', () => {
-
-//     it('should...', () => {
-//         console.log('FIX ME!');
-//     });
-
-// });
 
 // ********************** test de API **********************
 
@@ -63,6 +56,21 @@ describe('existPath', () => {
 
 });
 
+describe('archive', () => {
+    it('Es una funcion', () => {
+        expect(typeof archive).toBe('function');
+    });
+
+    it('Si es un archivo true', () => {
+        expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(true);
+    });
+
+    it('Si  no es un Archivo debería retornar False', () => {
+        expect(isMD("./pruebas")).toBe(false);
+    });
+
+});
+
 describe('isMD', () => {
 
     it('Es una función', () => {
@@ -77,6 +85,20 @@ describe('isMD', () => {
         expect(isMD("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba.txt")).toBe(false);
     });
 
+
+});
+
+describe('readDirectorio', () => {
+
+    const arrayDir = ['prueba.txt', 'prueba1.md', 'prueba2.md', 'pruebas1'];
+
+    it('Es una función', () => {
+        expect(typeof readDirectorio).toBe('function');
+    });
+
+    it('Despues de leer los directorios debera retornar la eñ contenido del primer directorio que encontro', () => {
+        expect(readDirectorio("./pruebas")).toEqual(arrayDir);
+    });
 
 });
 
@@ -97,19 +119,25 @@ describe('isDirectory', () => {
 
 });
 
-describe('readDirectorio', () => {
+describe('getAllFiles', () => {
+    const arrayDirectory = [
+        'pruebas\\prueba1.md',
+        'pruebas\\prueba2.md',
+        'pruebas\\pruebas1\\OTRA\\nuevo.md',
+        'pruebas\\pruebas1\\prueba3.md'
+    ];
 
     it('Es una función', () => {
-        expect(typeof readDirectorio).toBe('function');
+        expect(typeof getAllFiles).toBe('function');
     });
 
-    // it('Si es un Directorio debería retornar True', () => {
-    //     expect(isDirectory("H:/Laboratoria/MD-links/LIM015-md-links")).toBe(true);
-    // });
+    it('Si es un Directorio debería retornar un array con los archivos .md de ese directorio', () => {
+        expect(getAllFiles("./pruebas")).toEqual(arrayDirectory);
+    });
 
-    // it('Si es un Archivo debería retornar False', () => {
-    //     expect(isDirectory("H:/Laboratoria/MD-links/LIM015-md-links/pruebas/prueba1.md")).toBe(false);
-    // });
+    it('Si es un Directorio debería retornar un array con los archivos .md de ese directorio', () => {
+        expect(getAllFiles("./pruebas")).toEqual(arrayDirectory);
+    });
 
 
 });

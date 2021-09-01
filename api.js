@@ -7,7 +7,6 @@ function validatePath(ruta) {
     return path.isAbsolute(ruta); // Retorna un booleano
 }
 
-
 // funcion para convertir la ruta de relativa a absoluta
 const convertPathToAbsolute = (ruta) => (path.resolve(ruta));
 
@@ -21,6 +20,9 @@ function existPath(ruta) {
     }
 }
 
+// funcion para validar si es archivo
+const archive = (ruta) => fs.statSync(ruta).isFile();
+
 //Función que filtra archivos con extención .md
 const isMD = (ruta) => (path.extname(ruta) === ".md");
 
@@ -28,25 +30,11 @@ const isMD = (ruta) => (path.extname(ruta) === ".md");
 const isDirectory = (ruta) => (fs.lstatSync(ruta).isDirectory());
 
 // Funcion para leer directorio 
-// const readDirectorio = (ruta) => {
-//     let dirContent = fs.readdirSync(ruta); //Leer Directorio
-
-//     const filesMD = dirContent.filter(elem => { //Buscar todos los archivos MD
-//         return isMD(elem);
-//     });
-
-//     //console.log(filesMD);
-//     return filesMD.map(md => path.join(ruta, md)); //Unir con la ruta directorio a cada nombre de archivo
-// };
-
-// ******* Función para Comprobar si es un archivo
-
-const archive = (ruta) => fs.statSync(ruta).isFile();
-
 const readDirectorio = (ruta) => fs.readdirSync(ruta);
 
-// Obtener todos los archivos md. desde un archivo o directorio, retonando un array de rutas (path
+// Funcion Obtener todos los archivos md. desde un archivo o directorio, retonando un array de rutas (path
 const getAllFiles = (ruta) => {
+    // console.log(archive(ruta));
     let arrayFile = [];
     if (archive(ruta)) {
         if (isMD(ruta)) {
@@ -69,9 +57,10 @@ module.exports = {
     validatePath,
     convertPathToAbsolute,
     existPath,
+    archive,
     isDirectory,
     isMD,
-    // readDirectorio
+    readDirectorio,
     getAllFiles
 };
 
