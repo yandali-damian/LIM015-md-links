@@ -1,6 +1,8 @@
 // Modulos
 const path = require("path"); // Manejo de rutas
 const fs = require("fs"); // Manejo de sistema de archivos
+const log = console.log;
+const chalk = require('chalk');
 
 // funcion para validar la ruta
 function validatePath(ruta) {
@@ -35,6 +37,7 @@ const readDirectorio = (ruta) => fs.readdirSync(ruta);
 // Funcion Obtener todos los archivos md. desde un archivo o directorio, retonando un array de rutas (path
 const getAllFiles = (ruta) => {
     // console.log(archive(ruta));
+
     let arrayFile = [];
     if (archive(ruta)) {
         if (isMD(ruta)) {

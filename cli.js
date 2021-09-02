@@ -28,7 +28,6 @@ const optionValidate = ((links) => {
         }).catch(err => {
             // console.log(err);
                 return `${chalk.rgb(40, 255, 191)(link.file)} ${chalk.rgb(188, 255, 185)(link.href)} ${chalk.rgb(255, 0, 0)("500 FAIL")} ${chalk.rgb(247, 230, 173)(link.text)}`;
-                
         });
     });
 });

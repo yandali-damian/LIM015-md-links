@@ -21,6 +21,7 @@ const log = console.log;
 let ruta = process.argv[2];
 let opcionValidateOrStats = process.argv[3];
 let opcionStats = process.argv[4];
+let opcionCualquiera = process.argv[5];
 
 const help = `\n**********************************************************************************************************************************
 ${colors.cyan.bold('Puede usar las siguientes opciones:')}
@@ -41,32 +42,16 @@ if (!isAbsolute) {
 const exist = existPath(ruta);
 
 if (exist) { // Existe la ruta    
-    let archivosParaProcesar = [];
 
-    const esDirectorio = isDirectory(ruta);
-    if (esDirectorio) {
-        // Trabajamos con un directori
-        // console.log(getAllFiles(ruta));
-        const filesMD = getAllFiles(ruta);
-        //log(filesMD);
-        archivosParaProcesar = filesMD;
-    } else {
-        // Trabajamos con un archivo
-        const esMD = isMD(ruta);
+    let archivosParaProcesar = getAllFiles(ruta);
 
-        if (esMD) {
-            archivosParaProcesar.push(ruta);
-        } else {
-            log(chalk.red.bold('\n ❌ No es un archivo .MD ✉️'));
-        }
-    }
     //Validaciones
-    if (opcionValidateOrStats === "--validate" && opcionStats === "--stats") { //Reglas de Opcion
+    if (opcionValidateOrStats === "--validate" && opcionStats === "--stats" && opcionCualquiera === undefined) { //Reglas de Opcion
         log(chalk.red.bold('\n❌ Orden incorrecto de opciones... ☝️ '));
-    } else if (opcionValidateOrStats == "--help") {
+    } else if (opcionValidateOrStats == "--help" && opcionStats == undefined) { //
         log(help);
     } else if (archivosParaProcesar.length > 0) {
-        if (opcionValidateOrStats === "--stats" && opcionStats === "--validate") {
+        if (opcionValidateOrStats === "--stats" && opcionStats === "--validate" && opcionCualquiera === undefined) {
             Promise.all(
                 archivosParaProcesar.map(rutaLeer => {
                     return mdlinks(rutaLeer, { stats: true, validate: true }).then((arrayLinks) => { //Resolve                    
@@ -85,7 +70,7 @@ if (exist) { // Existe la ruta
                 log(`Total: ${total} \nUnique: ${unique} \nBroquen: ${broquen}`);
             });
 
-        } else if (opcionValidateOrStats === "--validate") {
+        } else if (opcionValidateOrStats === "--validate" && opcionStats === undefined) {
             archivosParaProcesar.forEach(rutaLeer => {
                 mdlinks(rutaLeer, { validate: true }).then((arrayLinks) => { //Resolve                   
                     arrayLinks.forEach((link) => log(link));
@@ -93,7 +78,7 @@ if (exist) { // Existe la ruta
                     log(err);
                 });
             });
-        } else if (opcionValidateOrStats === "--stats") {
+        } else if (opcionValidateOrStats === "--stats" && opcionStats === undefined) {
             Promise.all(
                 archivosParaProcesar.map(rutaLeer => {
                     return mdlinks(rutaLeer, { stats: true }).then((arrayLinks) => { //Resolve
@@ -109,7 +94,7 @@ if (exist) { // Existe la ruta
                 const unique = res.map(item => item.Unique).reduce((a, b) => a + b);
                 log(`Total: ${total} \nUnique: ${unique}`);
             });
-        } else {
+        } else if (opcionValidateOrStats === undefined) {
             archivosParaProcesar.forEach(rutaLeer => {
                 mdlinks(rutaLeer, { validate: false }).then((arrayLinks) => { //Resolve
                     arrayLinks.forEach((link) => log(link));
@@ -117,9 +102,11 @@ if (exist) { // Existe la ruta
                     log(err);
                 });
             });
+        } else {
+            log(chalk.red.bold('\n❌ Opcion incorrecto revisar ayuda usando --help ☝️ '));
         }
     } else {
-        log(chalk.red.bold('\n ❌ No existe archivos por procesar ✋'));
+        log(chalk.red.bold('\n ❌ No existe archivos MD por procesar ✋'));
     }
 
 } else {
