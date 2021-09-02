@@ -7,7 +7,6 @@
 - [3. Objetivos de aprendizaje 💪](#3-objetivos-de-aprendizaje-💪)
 - [4. Diagrama de flujo ✍](#4-Diagrama-de-flujo-✍)
 - [5. ¿Qué incluye la librería? 📚](#5-¿Qué-incluye-la-librería?-📚)
-- [6. Instalacion ⚙️](#6-Instalacion-⚙️)
 
 ---
 
@@ -266,4 +265,3 @@ Esta libreria esta desarrollada pensando en las necesidades del desarrollador we
 
 ![option_help](./img/help.jpg)
 
-## 6. Instalacion ⚙️

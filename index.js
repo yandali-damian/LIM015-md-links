@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // importando paquetes de node.js
 const chalk = require('chalk'); //dependencia para color y tipo de letra
 const colors = require('colors');
