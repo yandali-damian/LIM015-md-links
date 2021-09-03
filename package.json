@@ -1,15 +1,14 @@
 {
-    "name": "yandali-lim015",
-    "version": "0.1.0",
+    "name": "yandali-md-links",
+    "version": "0.1.2",
     "description": "Esta libreria esta desarrollada pensando en las necesidades del desarrollador web, en caso desee verificar o validar los enlaces de un o varios archivos .md se encuentran aun vigentes, detallo a continuacion las opciones que podra ingresar y los resultados.",
-    "main": "index.js",
+    "main": "mdlinks.js",
     "directories": {
         "test": "test"
     },
     "bin": {
         "mdLinks": "index.js"
     },
-
     "scripts": {
         "test": "jest --verbose --coverage"
     },
